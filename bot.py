@@ -75,7 +75,8 @@ async def change_keyword(message: types.Message):
     chat_id = message.chat.id
     args = message.text.split()
     if len(args)>1:
-        keywords = args[1]
+        keywords = args[1:]
+        keywords ' '.join(keywords)
         set_keyword(chat_id, keywords)       
     
 
@@ -224,7 +225,7 @@ async def handle_group_messages(message: types.Message):
         
         check_chat(message.chat.id)
         keywords = get_keyword(message.chat.id)
-        keywords = keywords.split('/')
+        keywords = keywords.split(' ')
         print(keywords)
         if [keyword for keyword in keywords if keyword in message.text.lower()] or "all" in keywords:
             print(message.text)
