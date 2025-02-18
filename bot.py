@@ -43,6 +43,16 @@ def new_chat(chat_id):
     cursor.execute('''INSERT INTO prompts (chat_id) VALUES (?)''', (chat_id,))
     conn.commit()
 
+def check_chat(chat_id):
+    conn = sqlite3.connect('venom.db')
+    cursor = conn.cursor()
+    cursor.execute(f'SELECT * FROM prompts WHERE chat_id = ?', (message.chat.id,))
+    result = cursor.fetchone()
+    if result is None:
+        cursor.execute('''INSERT INTO prompts (chat_id) VALUES (?)''', (chat_id,))
+    conn.commit()
+    conn.close()
+
 def set_keyword(chat_id: int, keyword: str):
     cursor.execute('''INSERT OR REPLACE INTO prompts (chat_id, keyword) VALUES (?, ?)''', (chat_id, keyword))
     conn.commit()
@@ -112,10 +122,7 @@ async def handle_group_messages(message: types.Message):
     if message.chat.type in ["group", "supergroup"]:
         #if 'venom' in message.text.lower() or 'веном' in message.text.lower():
         
-        cursor.execute(f'SELECT * FROM prompts WHERE chat_id = ?', (message.chat.id,))
-        result = cursor.fetchone()
-        if result is None:
-            new_chat(message.chat.id)
+        check_chat(message.chat.id)
         keywords = get_keyword(message.chat.id)
         keywords = keywords.split('/')
         print(keywords)
