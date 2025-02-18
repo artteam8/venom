@@ -101,7 +101,7 @@ async def change_prompt(message: types.Message):
         reply = f'Установлен промпт:\n{prompt}'
         if not ('{message}' in prompt):
             reply += 'В промпте нет {message}, ответ не будет учитывать ваше сообщение'
-        print(get_prompt(chat_id))
+        
         await message.reply(reply, parse_mode='Markdown')
     else:
         await message.reply('venom', parse_mode='Markdown')
@@ -120,6 +120,7 @@ async def handle_group_messages(message: types.Message):
         if [keyword for keyword in keywords if keyword in message.text.lower()] or "all" in keywords:
             print(message.text)
             prompt = get_prompt(message.chat.id)
+            print(prompt)
             ans =  await ai.create_answer(ai.history, prompt, message.text)
             await message.reply(ans, parse_mode='Markdown')
 # Add the router to the dispatcher
