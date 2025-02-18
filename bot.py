@@ -112,7 +112,7 @@ async def handle_group_messages(message: types.Message):
     if message.chat.type in ["group", "supergroup"]:
         #if 'venom' in message.text.lower() or 'веном' in message.text.lower():
         
-        cursor.execute(f'SELECT * FROM {prompts} WHERE chat_id = ?', (message.chat.id,))
+        cursor.execute(f'SELECT * FROM prompts WHERE chat_id = ?', (message.chat.id,))
         result = cursor.fetchone()
         if result is None:
             new_chat(message.chat.id)
