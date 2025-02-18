@@ -14,7 +14,7 @@ import sqlite3
 conn = sqlite3.connect('venom.db')
 cursor = conn.cursor()
 
-cursor.execute('''CREATE TABLE IF NOT EXISTS prompts (chat_id INTEGER PRIMARY KEY, prompt TEXT DEFAULT "")''')
+cursor.execute('''CREATE TABLE IF NOT EXISTS prompts (chat_id INTEGER PRIMARY KEY, prompt TEXT DEFAULT "", keyword TEXT DEFAULT "venom/веном" )''')
 conn.commit()
 
 #—
@@ -39,6 +39,16 @@ def get_random_prompt():
     random_prompt = cursor.fetchone()
     return random_prompt
 
+
+def set_keyword(chat_id: int, keyword: str):
+    cursor.execute('''INSERT OR REPLACE INTO prompts (chat_id, keyword) VALUES (?, ?)''', (chat_id, keyword))
+    conn.commit()
+
+def get_keyword(chat_id: int) -> str:
+    cursor.execute('SELECT keyword FROM prompts WHERE chat_id = ?', (chat_id,))
+    row = cursor.fetchone()
+    return row[0] if row else None
+
 # Initialize bot and dispatcher
 TOKEN = os.getenv("BOT_TOKEN")
 bot = Bot(token=TOKEN)
@@ -46,6 +56,15 @@ dp = Dispatcher()
 
 # Create a router for handling messages
 router = Router(name=__name__)
+
+@router.message(Command("prompt"))
+async def change_keyword(message: types.Message):
+    chat_id = message.chat.id
+    args = message.text.split()
+    if len(args)>1:
+        keywords = args[1]
+        set_keyword(chat_id, keywords)       
+    
 
 @router.message(Command("prompt"))
 async def change_prompt(message: types.Message):
@@ -57,13 +76,13 @@ async def change_prompt(message: types.Message):
     if args:
         prompt_type = args[0]
         if prompt_type == '—custom':
-            prompt = ''.join(args[1:])
+            prompt = ' '.join(args[1:])
         elif prompt_type == '—random':
             prompt = get_random_prompt()
         elif prompt_type == '—generated':
             n = int(args[1])
             if len(args)>2:
-                start_prompt = ''.join(args[2:])
+                start_prompt = ' '.join(args[2:])
                 prompt = ai.generate_prompt(n, start_prompt)
             else:
                 prompt = ai.generate_prompt(n)
@@ -87,8 +106,10 @@ async def change_prompt(message: types.Message):
 @router.message()
 async def handle_group_messages(message: types.Message):
     if message.chat.type in ["group", "supergroup"]:
-        if 'venom' in message.text.lower() or 'веном' in message.text.lower():
-            print(message.text)
+        #if 'venom' in message.text.lower() or 'веном' in message.text.lower():
+        keywords = list(get_keyword(message.chat.id).split('/'))
+        if [keyword for keyword in keywords if keyword in message.text.lower()] or "all" in keywords:
+            print(message.text)-
             prompt = get_prompt(message.chat.id)
             ans =  await ai.create_answer(ai.history, prompt, message.text)
             await message.reply(ans, parse_mode='Markdown')
