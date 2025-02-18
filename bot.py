@@ -56,11 +56,11 @@ async def change_prompt(message: types.Message):
 
     if args:
         prompt_type = args[0]
-        if prompt_type == '--custom':
+        if prompt_type == '—custom':
             prompt = ''.join(args[1:])
-        elif prompt_type == '--random':
+        elif prompt_type == '—random':
             prompt = get_random_prompt()
-        elif prompt_type == '--generated':
+        elif prompt_type == '—generated':
             n = int(args[1])
             if len(args)>2:
                 start_prompt = ''.join(args[2:])
