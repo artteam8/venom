@@ -2,6 +2,8 @@ import asyncio
 from aiogram import Bot, Dispatcher, Router, types
 import ai
 
+from aiogram.filters import Command
+
 import os
 from dotenv import load_dotenv
 
@@ -38,7 +40,7 @@ dp = Dispatcher()
 # Create a router for handling messages
 router = Router(name=__name__)
 
-@router.message(commands=["prompt"])
+@router.message(Command("prompt"))
 async def change_prompt(message: types.Message):
     chat_id = message.chat.id
     args = message.get_args()
