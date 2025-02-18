@@ -86,9 +86,9 @@ async def change_prompt(message: types.Message):
             n = int(args[1])
             if len(args)>2:
                 start_prompt = ' '.join(args[2:])
-                prompt = ai.generate_prompt(n, start_prompt)
+                prompt = await ai.generate_prompt(n, start_prompt)
             else:
-                prompt = ai.generate_prompt(n)
+                prompt = await ai.generate_prompt(n)
         else:
             print(prompt_type)
             if prompt_type in prompt_dict:
