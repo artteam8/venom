@@ -39,6 +39,9 @@ def get_random_prompt():
     random_prompt = cursor.fetchone()
     return random_prompt
 
+def new_chat(chat_id):
+    cursor.execute(f'''INSERT INTO {promts} (id) VALUES (?)''', (chat_id,))
+    conn.commit()
 
 def set_keyword(chat_id: int, keyword: str):
     cursor.execute('''INSERT OR REPLACE INTO prompts (chat_id, keyword) VALUES (?, ?)''', (chat_id, keyword))
@@ -108,6 +111,9 @@ async def handle_group_messages(message: types.Message):
     if message.chat.type in ["group", "supergroup"]:
         #if 'venom' in message.text.lower() or 'веном' in message.text.lower():
         keywords = list(get_keyword(message.chat.id).split('/'))
+        if not keywords:
+            new_chat(message.chat.id)
+            keywords = list(get_keyword(message.chat.id).split('/'))
         print(keywords)
         if [keyword for keyword in keywords if keyword in message.text.lower()] or "all" in keywords:
             print(message.text)
