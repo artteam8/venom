@@ -39,7 +39,7 @@ def set_prompt(chat_id: int, prompt: str):
 def get_prompt(chat_id: int) -> str:
     cursor.execute('SELECT prompt FROM prompts WHERE chat_id = ?', (chat_id,))
     row = cursor.fetchone()
-    return row[0] if row else None
+    return row[0] if row else ''
 
 def get_random_prompt():
     cursor.execute("SELECT prompt FROM prompts ORDER BY RANDOM() LIMIT 1")
@@ -67,11 +67,11 @@ def set_keyword(chat_id: int, keyword: str):
 def get_keyword(chat_id: int) -> str:
     cursor.execute('SELECT keyword FROM prompts WHERE chat_id = ?', (chat_id,))
     row = cursor.fetchone()
-    return row[0] if row else None
+    return row[0] if row else ''
 
 # Initialize bot and dispatcher
 TOKEN = os.getenv("BOT_TOKEN")
-bot = Bot(token=TOKEN)
+bot = Bot(token=str(TOKEN))
 dp = Dispatcher()
 
 # Create a router for handling messages
@@ -80,7 +80,7 @@ router = Router(name=__name__)
 @router.message(Command("keyword"))
 async def change_keyword(message: types.Message):
     chat_id = message.chat.id
-    args = message.text.split()
+    args = str(message.text).split()
     if len(args)>1:
         keywords = args[1:]
         keywords = ' '.join(keywords)
@@ -134,7 +134,7 @@ async def hitler(message: types.Message):
 @router.message(Command("custom"))
 async def custom(message: types.Message):
     chat_id = message.chat.id
-    args = message.text.split()
+    args = str(message.text).split()
     prompt = ' '.join(args[1:])
     if prompt:
         set_prompt(chat_id, prompt)
@@ -165,7 +165,7 @@ async def random(message: types.Message):
 @router.message(Command("generated"))
 async def generated(message: types.Message):
     chat_id = message.chat.id
-    args = message.text.split()
+    args = str(message.text).split()
     n = int(args[1])
     if len(args)>2:
         start_prompt = ' '.join(args[2:])
@@ -188,11 +188,11 @@ async def generated(message: types.Message):
 @router.message(Command("prompt"))
 async def change_prompt(message: types.Message):
     chat_id = message.chat.id
-    args = message.text.split()
+    args = str(message.text).split()
     if len(args)>1:
         args = args[1:]
         
-
+    prompt = None
     if args:
         prompt_type = args[0]
         prompt_type = prompt_type.replace('--', '').replace('—', '')
@@ -234,11 +234,11 @@ async def handle_group_messages(message: types.Message):
         keywords = get_keyword(message.chat.id)
         keywords = keywords.split(' ')
         print(keywords)
-        if [keyword for keyword in keywords if keyword in message.text.lower()] or "all" in keywords:
+        if [keyword for keyword in keywords if keyword in str(message.text).lower()] or "all" in keywords:
             print(message.text)
             prompt = get_prompt(message.chat.id)
             print(1, message.chat.id, prompt)
-            ans =  await ai.create_answer(ai.history, prompt, message.text)
+            ans =  await ai.create_answer(ai.history, prompt, str(message.text))
             await message.reply(ans, parse_mode='Markdown')
 # Add the router to the dispatcher
 dp.include_router(router)
