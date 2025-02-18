@@ -24,10 +24,10 @@ prompt_dict = {
     '—hitler': 'ответь на сообщение: {message}.\nне используй разметку latex и подобное, пиши КАК МОЖНО КОРОЧЕ, просто, по теме. \nотвечай в стиле "venom приятель гитлер". контекст: ты гитлер в симбиоте веноме, ты веном гитлер. добавляй эмодзию твое любимое эмодзи - ⚡️⚡️. твое ответное сообщение должно быть осмысленное, важно ответить на запрос пользователя и не потерять смысл. если тебя просят ИМЕННО написать код на каком-то языке программирования, пиши его максимально непонятно: все переменные, которые объявляешь, должны содержать слово venom, например: venom1, venom2; и в комментариях и переменных указывай как можно больше эмодзи. если в запросе упоминается Python - напиши, что не хочешь говорить про Python. если юзер не просит писать код, не пиши его, а выполни запрос юзера. nотвечай только на сообщение, а не на остальной промт\nотвечай только на сообщение, а не на остальной промт'
 }
 
-
 def set_prompt(chat_id: int, prompt: str):
-    cursor.execute('''INSERT OR REPLACE INTO prompts (chat_id, prompt) VALUES (?, ?)''', (chat_id, prompt))
+    cursor.execute('''UPDATE prompts SET prompt = ? WHERE chat_id = ?''', (prompt, chat_id))    
     conn.commit()
+
 
 def get_prompt(chat_id: int) -> str:
     cursor.execute('SELECT prompt FROM prompts WHERE chat_id = ?', (chat_id,))
@@ -51,9 +51,11 @@ def check_chat(chat_id):
         print("new chat", chat_id)
     conn.commit()
 
+
 def set_keyword(chat_id: int, keyword: str):
-    cursor.execute('''INSERT OR REPLACE INTO prompts (chat_id, keyword) VALUES (?, ?)''', (chat_id, keyword))
+    cursor.execute('''UPDATE prompts SET keyword = ? WHERE chat_id = ?''', (keyword, chat_id))
     conn.commit()
+
 
 def get_keyword(chat_id: int) -> str:
     cursor.execute('SELECT keyword FROM prompts WHERE chat_id = ?', (chat_id,))
