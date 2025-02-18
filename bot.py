@@ -22,7 +22,7 @@ def set_keyword_for_all(keyword: str):
     cursor.execute('''UPDATE prompts SET keyword = ?''', (keyword,))
     conn.commit()
 
-set_keyword_for_all('веном venom')
+#set_keyword_for_all('веном venom')
 
 #—
 prompt_dict = {
