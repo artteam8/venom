@@ -108,6 +108,7 @@ async def handle_group_messages(message: types.Message):
     if message.chat.type in ["group", "supergroup"]:
         #if 'venom' in message.text.lower() or 'веном' in message.text.lower():
         keywords = list(get_keyword(message.chat.id).split('/'))
+        print(keywords)
         if [keyword for keyword in keywords if keyword in message.text.lower()] or "all" in keywords:
             print(message.text)
             prompt = get_prompt(message.chat.id)
