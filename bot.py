@@ -79,7 +79,7 @@ async def change_keyword(message: types.Message):
         set_keyword(chat_id, keywords)       
     
 
-@router.message(Command("default"))
+@router.message(Command("venom"))
 async def default(message: types.Message):
     chat_id = message.chat.id
     prompt = prompt_dict['default']
@@ -108,7 +108,7 @@ async def blond(message: types.Message):
         await message.reply('venom', parse_mode='Markdown')
 
 
-@router.message(Command("hitler"))
+@router.message(Command("1488"))
 async def hitler(message: types.Message):
     chat_id = message.chat.id
     prompt = prompt_dict['hitler']
