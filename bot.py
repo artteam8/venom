@@ -68,6 +68,7 @@ async def change_prompt(message: types.Message):
             else:
                 prompt = ai.generate_prompt(n)
         else:
+            print(prompt_type)
             if prompt_type in prompt_dict:
                 prompt = prompt_dict[prompt_type]
             else:
