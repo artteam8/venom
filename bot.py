@@ -1,5 +1,5 @@
 import asyncio
-from aiogram import Bot, Dispatcher, Router, types, Command
+from aiogram import Bot, Dispatcher, Router, types
 import ai
 
 import os
