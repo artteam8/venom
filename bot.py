@@ -79,12 +79,111 @@ async def change_keyword(message: types.Message):
         set_keyword(chat_id, keywords)       
     
 
+@router.message(Command("default"))
+async def default(message: types.Message):
+    chat_id = message.chat.id
+    prompt = prompt_dict['default']
+    if prompt:
+        set_prompt(chat_id, prompt)
+        reply = f'Установлен промпт:\n{prompt}'
+        if not ('{message}' in prompt):
+            reply += 'В промпте нет {message}, ответ не будет учитывать ваше сообщение'
+        print(2, chat_id, prompt)
+        await message.reply(reply, parse_mode='Markdown')
+    else:
+        await message.reply('venom', parse_mode='Markdown')
+
+@router.message(Command("blond"))
+async def blond(message: types.Message):
+    chat_id = message.chat.id
+    prompt = prompt_dict['blond']
+    if prompt:
+        set_prompt(chat_id, prompt)
+        reply = f'Установлен промпт:\n{prompt}'
+        if not ('{message}' in prompt):
+            reply += 'В промпте нет {message}, ответ не будет учитывать ваше сообщение'
+        print(2, chat_id, prompt)
+        await message.reply(reply, parse_mode='Markdown')
+    else:
+        await message.reply('venom', parse_mode='Markdown')
+
+
+@router.message(Command("hitler"))
+async def hitler(message: types.Message):
+    chat_id = message.chat.id
+    prompt = prompt_dict['hitler']
+    if prompt:
+        set_prompt(chat_id, prompt)
+        reply = f'Установлен промпт:\n{prompt}'
+        if not ('{message}' in prompt):
+            reply += 'В промпте нет {message}, ответ не будет учитывать ваше сообщение'
+        print(2, chat_id, prompt)
+        await message.reply(reply, parse_mode='Markdown')
+    else:
+        await message.reply('venom', parse_mode='Markdown')
+    
+
+@router.message(Command("custom"))
+async def custom(message: types.Message):
+    chat_id = message.chat.id
+    args = message.text.split()
+    prompt = ' '.join(args[1:])
+    if prompt:
+        set_prompt(chat_id, prompt)
+        reply = f'Установлен промпт:\n{prompt}'
+        if not ('{message}' in prompt):
+            reply += 'В промпте нет {message}, ответ не будет учитывать ваше сообщение'
+        print(2, chat_id, prompt)
+        await message.reply(reply, parse_mode='Markdown')
+    else:
+        await message.reply('venom', parse_mode='Markdown')
+
+
+@router.message(Command("random"))
+async def random(message: types.Message):
+    chat_id = message.chat.id
+    prompt = get_random_prompt()
+    if prompt:
+        set_prompt(chat_id, prompt)
+        reply = f'Установлен промпт:\n{prompt}'
+        if not ('{message}' in prompt):
+            reply += 'В промпте нет {message}, ответ не будет учитывать ваше сообщение'
+        print(2, chat_id, prompt)
+        await message.reply(reply, parse_mode='Markdown')
+    else:
+        await message.reply('venom', parse_mode='Markdown')
+
+
+@router.message(Command("generated"))
+async def generated(message: types.Message):
+    chat_id = message.chat.id
+    args = message.text.split()
+    n = int(args[1])
+    if len(args)>2:
+        start_prompt = ' '.join(args[2:])
+        prompt = await ai.generate_prompt(n, start_prompt)
+    else:
+        prompt = await ai.generate_prompt(n)
+    
+    if prompt:
+        set_prompt(chat_id, prompt)
+        reply = f'Установлен промпт:\n{prompt}'
+        if not ('{message}' in prompt):
+            reply += 'В промпте нет {message}, ответ не будет учитывать ваше сообщение'
+        print(2, chat_id, prompt)
+        await message.reply(reply, parse_mode='Markdown')
+    else:
+        await message.reply('venom', parse_mode='Markdown')
+
+
+
 @router.message(Command("prompt"))
 async def change_prompt(message: types.Message):
     chat_id = message.chat.id
     args = message.text.split()
     if len(args)>1:
         args = args[1:]
+        
 
     if args:
         prompt_type = args[0]
