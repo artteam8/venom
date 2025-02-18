@@ -111,10 +111,12 @@ async def change_prompt(message: types.Message):
 async def handle_group_messages(message: types.Message):
     if message.chat.type in ["group", "supergroup"]:
         #if 'venom' in message.text.lower() or 'веном' in message.text.lower():
-        keywords = get_keyword(message.chat.id)
-        if not keywords:
+        
+        cursor.execute(f'SELECT * FROM {table_name} WHERE id = ?', (record_id,))
+        result = cursor.fetchone()
+        if result is None:
             new_chat(message.chat.id)
-            keywords = get_keyword(message.chat.id)
+        keywords = get_keyword(message.chat.id)
         keywords = keywords.split('/')
         print(keywords)
         if [keyword for keyword in keywords if keyword in message.text.lower()] or "all" in keywords:
