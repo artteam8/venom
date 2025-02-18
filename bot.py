@@ -151,6 +151,7 @@ async def custom(message: types.Message):
 async def random(message: types.Message):
     chat_id = message.chat.id
     prompt = get_random_prompt()
+    print("radom prompt", prompt)
     if prompt:
         set_prompt(chat_id, prompt)
         reply = f'Установлен промпт:\n{prompt}'
