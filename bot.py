@@ -40,7 +40,7 @@ def get_random_prompt():
     return random_prompt
 
 def new_chat(chat_id):
-    cursor.execute('''INSERT INTO prompts (id) VALUES (?)''', (chat_id,))
+    cursor.execute('''INSERT INTO prompts (chat_id) VALUES (?)''', (chat_id,))
     conn.commit()
 
 def set_keyword(chat_id: int, keyword: str):
