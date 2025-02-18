@@ -26,8 +26,6 @@ prompt_dict = {
 
 
 def set_prompt(chat_id: int, prompt: str):
-    print("промпт:\n")
-    print(prompt)
     cursor.execute('''INSERT OR REPLACE INTO prompts (chat_id, prompt) VALUES (?, ?)''', (chat_id, prompt))
     conn.commit()
 
@@ -103,6 +101,7 @@ async def change_prompt(message: types.Message):
         reply = f'Установлен промпт:\n{prompt}'
         if not ('{message}' in prompt):
             reply += 'В промпте нет {message}, ответ не будет учитывать ваше сообщение'
+        print(get_prompt(chat_id))
         await message.reply(reply, parse_mode='Markdown')
     else:
         await message.reply('venom', parse_mode='Markdown')
