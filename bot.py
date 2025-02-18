@@ -43,7 +43,7 @@ def get_prompt(chat_id: int) -> str:
 
 def get_random_prompt():
     cursor.execute("SELECT prompt FROM prompts ORDER BY RANDOM() LIMIT 1")
-    random_prompt = cursor.fetchone()
+    random_prompt = cursor.fetchone()[0]
     return random_prompt
 
 def new_chat(chat_id):
