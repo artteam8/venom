@@ -12,11 +12,7 @@ import sqlite3
 conn = sqlite3.connect('venom.db')
 cursor = conn.cursor()
 
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS prompts (
-    chat_id INTEGER PRIMARY KEY,
-    prompt TEXT DEFAULT ''
-''')
+cursor.execute('''CREATE TABLE IF NOT EXISTS prompts (chat_id INTEGER PRIMARY KEY, prompt TEXT DEFAULT ""''')
 conn.commit()
 
 
