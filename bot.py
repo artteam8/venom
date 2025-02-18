@@ -26,6 +26,8 @@ prompt_dict = {
 
 
 def set_prompt(chat_id: int, prompt: str):
+    print("промпт:\n")
+    print(prompt)
     cursor.execute('''INSERT OR REPLACE INTO prompts (chat_id, prompt) VALUES (?, ?)''', (chat_id, prompt))
     conn.commit()
 
