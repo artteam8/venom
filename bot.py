@@ -57,7 +57,7 @@ dp = Dispatcher()
 # Create a router for handling messages
 router = Router(name=__name__)
 
-@router.message(Command("prompt"))
+@router.message(Command("keyword"))
 async def change_keyword(message: types.Message):
     chat_id = message.chat.id
     args = message.text.split()
