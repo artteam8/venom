@@ -44,14 +44,12 @@ def new_chat(chat_id):
     conn.commit()
 
 def check_chat(chat_id):
-    conn = sqlite3.connect('venom.db')
-    cursor = conn.cursor()
     cursor.execute(f'SELECT * FROM prompts WHERE chat_id = ?', (chat_id,))
     result = cursor.fetchone()
     if result is None:
         cursor.execute('''INSERT INTO prompts (chat_id) VALUES (?)''', (chat_id,))
+        print("new chat", chat_id)
     conn.commit()
-    conn.close()
 
 def set_keyword(chat_id: int, keyword: str):
     cursor.execute('''INSERT OR REPLACE INTO prompts (chat_id, keyword) VALUES (?, ?)''', (chat_id, keyword))
