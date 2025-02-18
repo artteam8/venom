@@ -50,7 +50,10 @@ router = Router(name=__name__)
 @router.message(Command("prompt"))
 async def change_prompt(message: types.Message):
     chat_id = message.chat.id
-    args = message.get_args()
+    args = message.text.split()
+    if len(args)>1:
+        args = args[1:]
+
     if args:
         prompt_type = args[0]
         if prompt_type == '--custom':
