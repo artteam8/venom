@@ -76,7 +76,7 @@ async def change_keyword(message: types.Message):
     args = message.text.split()
     if len(args)>1:
         keywords = args[1:]
-        keywords ' '.join(keywords)
+        keywords = ' '.join(keywords)
         set_keyword(chat_id, keywords)       
     
 
