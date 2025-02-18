@@ -114,7 +114,7 @@ async def handle_group_messages(message: types.Message):
         if not keywords:
             new_chat(message.chat.id)
             keywords = get_keyword(message.chat.id)
-        keywords = keywords.split('/'))
+        keywords = keywords.split('/')
         print(keywords)
         if [keyword for keyword in keywords if keyword in message.text.lower()] or "all" in keywords:
             print(message.text)
