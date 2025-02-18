@@ -38,3 +38,13 @@ async def create_answer(history : list, prompt : str, message: str):
     #    history.pop(0)
     #    history.pop(0)
     return response.choices[0].message.content
+
+async def generate_prompt(n, start_prompt = 'создай промпт для LLM (чат-бота), по которому она будет отвечать на сообщения. ты можешь написать в промпте, чтобы чат-бот отвечал как какой-то персонаж, написать его черты и т.д. также укажи место, куда будет вставляться запрос пользователя, как {message} - это очень важно.'):
+    client = AsyncClient(provider=ChatGLM)
+    current_prompt = '{message}'
+    bot_role="чат-бот"
+    for i in range(n):
+        extra = current_prompt.replace('{message}', start_prompt)
+        response = await client.chat.completions.create(messages=[{"role" : bot_role, "content" : extra}], model='glm-4')
+        current_prompt = response.choices[0].message.content
+    return current_prompt

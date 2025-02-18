@@ -29,6 +29,10 @@ def get_prompt(chat_id: int) -> str:
     row = cursor.fetchone()
     return row[0] if row else None
 
+def get_random_prompt():
+    cursor.execute("SELECT prompt FROM prompts ORDER BY RANDOM() LIMIT 1")
+    random_prompt = cursor.fetchone()
+    return random_prompt
 
 # Initialize bot and dispatcher
 TOKEN = os.getenv("BOT_TOKEN")
@@ -39,12 +43,37 @@ dp = Dispatcher()
 router = Router(name=__name__)
 
 @router.message(Command("/prompt"))
-async def handle_hello(message: types.Message):
+async def change_prompt(message: types.Message):
     chat_id = message.chat.id
     args = message.get_args()
     if args:
-        prompt = args[0]
+        prompt_type = args[0]
+        if prompt_type == '--custom':
+            prompt = ''.join(args[1:])
+        elif prompt_type == '--random':
+            prompt = get_random_prompt()
+        elif prompt_type == '--generated':
+            n = int(args[1])
+            if len(args)>2:
+                start_prompt = ''.join(args[2:])
+                prompt = ai.generate_prompt(n, start_prompt)
+            else:
+                prompt = ai.generate_prompt(n)
+        else:
+            if prompt_type in prompt_dict:
+                prompt = prompt_dict[prompt_type]
+            else:
+                prompt = prompt_dict['--default']
+
+    if prompt:
         set_prompt(chat_id, prompt)
+        reply = f'Установлен промпт:\n{prompt}'
+        if not ('{message}' in prompt):
+            reply += 'В промпте нет {message}, ответ не будет учитывать ваше сообщение'
+        await message.reply(reply, parse_mode='Markdown')
+    else:
+        await message.reply('venom', parse_mode='Markdown')
+        
         
 @router.message()
 async def handle_group_messages(message: types.Message):
