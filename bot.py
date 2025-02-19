@@ -256,6 +256,8 @@ async def handle_group_messages(message: types.Message):
             prompt = get_prompt(message.chat.id)
             print(1, message.chat.id, prompt)
             ans =  await ai.create_answer(ai.history, prompt, str(message.text))
+            if not ans or ans is None or ans=='':
+                ans = '[ДАННЫЕ УДАЛЕНЫ]'
             await message.reply(ans, parse_mode='Markdown')
 # Add the router to the dispatcher
 dp.include_router(router)
