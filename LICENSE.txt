@@ -1,0 +1,3 @@
+Copyright (c) [Your Name] [Year]
+
+All rights reserved. No part of this project may be copied, modified, or distributed without prior written permission from the author.

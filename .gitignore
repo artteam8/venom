@@ -1,2 +1,4 @@
 errors.log
 .env
+__pycache__
+venom.db
