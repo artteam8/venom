@@ -4,6 +4,8 @@ import ai
 
 from aiogram.filters import Command
 
+from aiogram import md
+
 import os
 from dotenv import load_dotenv
 
@@ -98,6 +100,7 @@ async def default(message: types.Message):
         if not ('{message}' in prompt):
             reply += 'В промпте нет {message}, ответ не будет учитывать ваше сообщение'
         print(2, chat_id, prompt)
+        reply = md.quote(reply)
         await message.reply(reply, parse_mode='Markdown')
     else:
         await message.reply('venom', parse_mode='Markdown')
@@ -112,6 +115,7 @@ async def blond(message: types.Message):
         if not ('{message}' in prompt):
             reply += 'В промпте нет {message}, ответ не будет учитывать ваше сообщение'
         print(2, chat_id, prompt)
+        reply = md.quote(reply)
         await message.reply(reply, parse_mode='Markdown')
     else:
         await message.reply('venom', parse_mode='Markdown')
@@ -127,6 +131,7 @@ async def hitler(message: types.Message):
         if not ('{message}' in prompt):
             reply += 'В промпте нет {message}, ответ не будет учитывать ваше сообщение'
         print(2, chat_id, prompt)
+        reply = md.quote(reply)
         await message.reply(reply, parse_mode='Markdown')
     else:
         await message.reply('venom', parse_mode='Markdown')
@@ -143,6 +148,7 @@ async def hitler(message: types.Message):
         if not ('{message}' in prompt):
             reply += 'В промпте нет {message}, ответ не будет учитывать ваше сообщение'
         print(2, chat_id, prompt)
+        reply = md.quote(reply)
         await message.reply(reply, parse_mode='Markdown')
     else:
         await message.reply('venom', parse_mode='Markdown')
@@ -159,6 +165,7 @@ async def custom(message: types.Message):
         if not ('{message}' in prompt):
             reply += 'В промпте нет {message}, ответ не будет учитывать ваше сообщение'
         print(2, chat_id, prompt)
+        reply = md.quote(reply)
         await message.reply(reply, parse_mode='Markdown')
     else:
         await message.reply('venom', parse_mode='Markdown')
@@ -174,6 +181,7 @@ async def random(message: types.Message):
         if not ('{message}' in prompt):
             reply += 'В промпте нет {message}, ответ не будет учитывать ваше сообщение'
         print(2, chat_id, prompt)
+        reply = md.quote(reply)
         await message.reply(reply, parse_mode='Markdown')
     else:
         await message.reply('venom', parse_mode='Markdown')
@@ -196,6 +204,7 @@ async def generated(message: types.Message):
         if not ('{message}' in prompt):
             reply += 'В промпте нет {message}, ответ не будет учитывать ваше сообщение'
         print(2, chat_id, prompt)
+        reply = md.quote(reply)
         await message.reply(reply, parse_mode='Markdown')
     else:
         await message.reply('venom', parse_mode='Markdown')
@@ -240,7 +249,19 @@ async def change_prompt(message: types.Message):
         await message.reply(reply, parse_mode='Markdown')
     else:
         await message.reply('venom', parse_mode='Markdown')
-        
+
+enable_markdown = True
+
+@router.message(Command("markdown"))
+async def generated(message: types.Message):
+    chat_id = message.chat.id
+    args = str(message.text).split()
+    
+    if len(args)>1:
+        if args[1]=='off':
+            enable_markdown = False
+        else:
+            enable_markdown = True
         
 @router.message()
 async def handle_group_messages(message: types.Message):
@@ -258,6 +279,9 @@ async def handle_group_messages(message: types.Message):
             ans =  await ai.create_answer(ai.history, prompt, str(message.text))
             if not ans or ans is None or ans=='':
                 ans = '[ДАННЫЕ УДАЛЕНЫ]'
+            
+            if enable_markdown==False:
+                ans = md.quote(ans)
             await message.reply(ans, parse_mode='Markdown')
 # Add the router to the dispatcher
 dp.include_router(router)
