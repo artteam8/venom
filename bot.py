@@ -1,5 +1,6 @@
 import asyncio
 import os
+import ai
 from aiogram import Bot, Dispatcher, Router, types, md
 from aiogram.filters import Command
 from aiosqlite import connect
